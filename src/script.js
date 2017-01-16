@@ -1,9 +1,19 @@
+import SafeFormat from './module/SafeFormat';
+
 (function() {
   'use strict';
   class Safe {
     constructor(option) {
-      if(global.console) {
-        console.log('Thanks, world!');
+    }
+
+    encode(opts = {}) {
+      let type = opts.type || 'safe-format';
+      let obj = opts.obj;
+
+      let safeFormat = new SafeFormat();
+
+      if(type === 'safe-format') {
+        return safeFormat.encode(obj);
       }
     }
   }
