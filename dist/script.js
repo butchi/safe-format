@@ -7,8 +7,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
   'use strict';
 
-  var NpmStarter = function NpmStarter(option) {
-    _classCallCheck(this, NpmStarter);
+  var Safe = function Safe(option) {
+    _classCallCheck(this, Safe);
 
     if (global.console) {
       console.log('Thanks, world!');
@@ -18,7 +18,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // export
 
 
-  global.NpmStarter = NpmStarter;
+  global.Safe = Safe;
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
