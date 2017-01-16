@@ -18,6 +18,7 @@
     console.log(`${JSON.stringify(obj)}:`);
     console.log(safe.encode({
       obj: obj,
+      delimiter: '-',
     }));
     console.log('');
   }

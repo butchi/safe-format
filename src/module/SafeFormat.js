@@ -1,5 +1,6 @@
 export default class SafeForamt {
-  constructor(_opts = {}) {
+  constructor(opts = {}) {
+    this.delimiter = opts.delimiter || '-';
   }
 
   encode(obj) {
@@ -112,8 +113,6 @@ export default class SafeForamt {
   }
 
   join(leftStr, rightStr) {
-    const delimiter = '-';
-
     let len = Math.max(this.getLongest(leftStr), this.getLongest(rightStr)) + 1;
 
     return leftStr + this.constantSpace(len) + rightStr;
@@ -131,8 +130,6 @@ export default class SafeForamt {
 
   // from markright.js
   getLongest(str) {
-    const delimiter = '-';
-
     let longest = 0;
 
     let len = str.length;
@@ -140,7 +137,7 @@ export default class SafeForamt {
     let longTmp = 0;
 
     for(i = 0; i < len; i++) {
-      if(str[i] === delimiter) {
+      if(str[i] === this.delimiter) {
         longTmp++;
       } else {
         longTmp = 0;
@@ -154,13 +151,11 @@ export default class SafeForamt {
 
   // from markright.js
   constantSpace(len) {
-    const delimiter = '-';
-
     var ret = '';
     let i;
 
     for(i = 0; i < len; i++) {
-      ret += delimiter;
+      ret += this.delimiter;
     }
 
     return ret;
@@ -175,13 +170,13 @@ export default class SafeForamt {
       let boole = variable;
 
       if(boole === true) {
-        return 'boolean-true';
+        return `boolean${this.delimiter}true`;
       }
       if(boole === false) {
-        return 'boolean-false';
+        return `boolean${this.delimiter}false`;
       }
     } else if(typeof variable === 'number') {
-      return 'number-' + {
+      return 'number' + this.delimiter + {
         0: 'zero',
         1: 'one',
         2: 'two',
@@ -194,7 +189,7 @@ export default class SafeForamt {
         9: 'nine',
       }[variable];
     } else if(typeof variable === 'string') {
-      return 'string-' + variable;
+      return 'string' + this.delimiter + variable;
     } else {
       return true;
     }

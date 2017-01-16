@@ -9,8 +9,11 @@ import SafeFormat from './module/SafeFormat';
     encode(opts = {}) {
       let type = opts.type || 'safe-format';
       let obj = opts.obj;
+      let delimiter = opts.delimiter || '-';
 
-      let safeFormat = new SafeFormat();
+      let safeFormat = new SafeFormat({
+        delimiter: delimiter,
+      });
 
       if(type === 'safe-format') {
         return safeFormat.encode(obj);
