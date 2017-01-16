@@ -13,9 +13,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var SafeForamt = function () {
   function SafeForamt() {
-    var _opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, SafeForamt);
+
+    this.delimiter = opts.delimiter || '-';
   }
 
   _createClass(SafeForamt, [{
@@ -135,8 +137,6 @@ var SafeForamt = function () {
   }, {
     key: 'join',
     value: function join(leftStr, rightStr) {
-      var delimiter = '-';
-
       var len = Math.max(this.getLongest(leftStr), this.getLongest(rightStr)) + 1;
 
       return leftStr + this.constantSpace(len) + rightStr;
@@ -160,8 +160,6 @@ var SafeForamt = function () {
   }, {
     key: 'getLongest',
     value: function getLongest(str) {
-      var delimiter = '-';
-
       var longest = 0;
 
       var len = str.length;
@@ -169,7 +167,7 @@ var SafeForamt = function () {
       var longTmp = 0;
 
       for (i = 0; i < len; i++) {
-        if (str[i] === delimiter) {
+        if (str[i] === this.delimiter) {
           longTmp++;
         } else {
           longTmp = 0;
@@ -186,13 +184,11 @@ var SafeForamt = function () {
   }, {
     key: 'constantSpace',
     value: function constantSpace(len) {
-      var delimiter = '-';
-
       var ret = '';
       var i = void 0;
 
       for (i = 0; i < len; i++) {
-        ret += delimiter;
+        ret += this.delimiter;
       }
 
       return ret;
@@ -208,13 +204,13 @@ var SafeForamt = function () {
         var boole = variable;
 
         if (boole === true) {
-          return 'boolean-true';
+          return 'boolean' + this.delimiter + 'true';
         }
         if (boole === false) {
-          return 'boolean-false';
+          return 'boolean' + this.delimiter + 'false';
         }
       } else if (typeof variable === 'number') {
-        return 'number-' + {
+        return 'number' + this.delimiter + {
           0: 'zero',
           1: 'one',
           2: 'two',
@@ -227,7 +223,7 @@ var SafeForamt = function () {
           9: 'nine'
         }[variable];
       } else if (typeof variable === 'string') {
-        return 'string-' + variable;
+        return 'string' + this.delimiter + variable;
       } else {
         return true;
       }
@@ -268,8 +264,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var type = opts.type || 'safe-format';
         var obj = opts.obj;
+        var delimiter = opts.delimiter || '-';
 
-        var safeFormat = new _SafeFormat2.default();
+        var safeFormat = new _SafeFormat2.default({
+          delimiter: delimiter
+        });
 
         if (type === 'safe-format') {
           return safeFormat.encode(obj);
