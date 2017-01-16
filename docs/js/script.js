@@ -1,1 +1,1 @@
-new NpmStarter();
+new Safe();
