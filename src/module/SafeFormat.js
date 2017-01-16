@@ -7,6 +7,17 @@ export default class SafeForamt {
     let rightStr = '';
     let ret = '';
 
+    rightStr = this.encodeChild(obj);
+
+    ret = this.join(HEAD_SAFE, rightStr);
+
+    return ret;
+  }
+
+  encodeChild(obj) {
+    let rightStr = '';
+    let ret = '';
+
     if(obj === null) {
       rightStr = this.encodePrimitive(obj);
     } else if(typeof obj === 'object') {
@@ -26,7 +37,7 @@ export default class SafeForamt {
       rightStr = this.encodePrimitive(variable);
     }
 
-    ret = this.join(HEAD_SAFE, rightStr);
+    ret = rightStr;
 
     return ret;
   }
@@ -50,7 +61,7 @@ export default class SafeForamt {
     const first = arr[0];
     const rest = arr.slice(1);
 
-    const left = this.encodePrimitive(first);
+    const left = this.encodeChild(first);
     const right = this.encodeArray(rest);
 
     if(right) {
@@ -72,12 +83,12 @@ export default class SafeForamt {
     } else if(keys.length === 0) {
       return this.encodePrimitive(undefined);
     } else if(keys.length === 1) {
-      return this.encodeKeyValue(keys[0], this.encodePrimitive(obj[keys[0]]));
+      return this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
     }
 
     const head = 'object';
 
-    const left = this.encodeKeyValue(keys[0], this.encodePrimitive(obj[keys[0]]));
+    const left = this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
 
     let objRest = {};
 
