@@ -1,7 +1,7 @@
-# npm-starter
+# safe-format
 
 ## usage
 
 ```
-npm install npm-starter
+npm install safe-format
 ```
