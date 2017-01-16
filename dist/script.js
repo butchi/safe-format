@@ -25,6 +25,18 @@ var SafeForamt = function () {
       var rightStr = '';
       var ret = '';
 
+      rightStr = this.encodeChild(obj);
+
+      ret = this.join(HEAD_SAFE, rightStr);
+
+      return ret;
+    }
+  }, {
+    key: 'encodeChild',
+    value: function encodeChild(obj) {
+      var rightStr = '';
+      var ret = '';
+
       if (obj === null) {
         rightStr = this.encodePrimitive(obj);
       } else if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') {
@@ -44,7 +56,7 @@ var SafeForamt = function () {
         rightStr = this.encodePrimitive(variable);
       }
 
-      ret = this.join(HEAD_SAFE, rightStr);
+      ret = rightStr;
 
       return ret;
     }
@@ -69,7 +81,7 @@ var SafeForamt = function () {
       var first = arr[0];
       var rest = arr.slice(1);
 
-      var left = this.encodePrimitive(first);
+      var left = this.encodeChild(first);
       var right = this.encodeArray(rest);
 
       if (right) {
@@ -92,12 +104,12 @@ var SafeForamt = function () {
       } else if (keys.length === 0) {
         return this.encodePrimitive(undefined);
       } else if (keys.length === 1) {
-        return this.encodeKeyValue(keys[0], this.encodePrimitive(obj[keys[0]]));
+        return this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
       }
 
       var head = 'object';
 
-      var left = this.encodeKeyValue(keys[0], this.encodePrimitive(obj[keys[0]]));
+      var left = this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
 
       var objRest = {};
 
