@@ -15,8 +15,21 @@
   function encodeSafe(obj) {
     var safe = new Safe();
 
+    var $wrapper = $('.wrapper');
+
+    var markright = new Markright({
+      delimiter: '-',
+      opener: '(',
+      closer: ')',
+    });
+
+    function mark(str) {
+      var $elm = $(`<div><span>${markright.html(str)}</span></div>`);
+      $wrapper.append($elm);
+    }
+
     console.log(`${JSON.stringify(obj)}:`);
-    console.log(safe.encode({
+    mark(safe.encode({
       obj: obj,
       delimiter: '-',
     }));
