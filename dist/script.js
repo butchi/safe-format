@@ -21,7 +21,181 @@ var SafeDecoder = function () {
   _createClass(SafeDecoder, [{
     key: 'decode',
     value: function decode(str) {
+      var ret = this.decodeChild(str);
+
+      return ret;
+    }
+
+    // from markright.js#branch
+
+  }, {
+    key: 'decodeChild',
+    value: function decodeChild(str) {
+      var _this = this;
+
+      var isSafe = false;
+      var ret = void 0;
+
+      if (str.indexOf(this.delimiter) !== -1) {
+        (function () {
+          var mode = void 0;
+
+          _this.splitStr(str).forEach(function (elm, i) {
+            if (i === 0 && elm.indexOf(_this.delimiter) === -1) {
+              if (elm == null) {} else if (elm === 'safe') {
+                isSafe = true;
+
+                mode = elm;
+              } else if (elm === 'null') {
+                mode = elm;
+
+                ret = null;
+              } else if (elm === 'undefined') {
+                mode = elm;
+
+                ret = undefined;
+              } else if (elm === 'boolean') {
+                mode = elm;
+              } else if (elm === 'number') {
+                mode = elm;
+              } else if (elm === 'string') {
+                mode = elm;
+
+                ret = '';
+              } else if (elm === 'array') {
+                mode = elm;
+
+                ret = [];
+              } else if (elm === 'object') {
+                mode = elm;
+
+                ret = {};
+              }
+            } else {
+              if (mode === 'safe') {
+                ret = _this.decodeChild(elm, mode);
+              }
+
+              if (mode === 'boolean') {
+                ret = elm;
+              }
+
+              if (mode === 'number') {
+                ret = {
+                  'zero': 0,
+                  'one': 1,
+                  'two': 2,
+                  'three': 3,
+                  'four': 4,
+                  'five': 5,
+                  'six': 6,
+                  'seven': 7,
+                  'eight': 8,
+                  'nine': 9
+                }[elm];
+              }
+
+              if (mode === 'string') {
+                ret += elm;
+              }
+
+              if (mode === 'array') {
+                if (elm.indexOf(_this.delimiter) !== -1) {
+                  ret = _this.decodeArr(elm);
+                } else {}
+              }
+
+              if (mode === 'object') {
+                if (elm.indexOf(_this.delimiter) !== -1) {
+                  ret = _this.decodeObj(elm);
+                } else {}
+              }
+            }
+          });
+        })();
+      } else {
+        ret = str;
+      }
+
+      return ret;
+    }
+  }, {
+    key: 'decodeArr',
+    value: function decodeArr(str) {
+      var _this2 = this;
+
+      var ret = [];
+
+      this.splitStr(str).forEach(function (elm) {
+        ret.push(_this2.decodeChild(elm));
+      });
+
+      return ret;
+    }
+  }, {
+    key: 'decodeObj',
+    value: function decodeObj(str) {
+      var _this3 = this;
+
       var ret = {};
+
+      this.splitStr(str).forEach(function (elm) {
+        var keyVal = _this3.splitStr(elm);
+
+        var key = keyVal[0];
+        var val = keyVal[1];
+
+        ret[key] = _this3.decodeChild(val);
+      });
+
+      return ret;
+    }
+
+    // from markright.js
+
+  }, {
+    key: 'splitStr',
+    value: function splitStr(str) {
+      var res = void 0;
+      var longest = this.getLongest(str);
+
+      res = str.split(this.constantSpace(longest));
+
+      return res;
+    }
+
+    // from markright.js
+
+  }, {
+    key: 'getLongest',
+    value: function getLongest(str) {
+      var longest = 0;
+
+      var len = str.length;
+      var i = void 0;
+      var longTmp = 0;
+
+      for (i = 0; i < len; i++) {
+        if (str[i] === this.delimiter) {
+          longTmp++;
+        } else {
+          longTmp = 0;
+        }
+
+        longest = Math.max(longest, longTmp);
+      }
+
+      return longest;
+    }
+  }, {
+    key: 'constantSpace',
+    value: function constantSpace(len) {
+      var ret = '';
+      var i = void 0;
+
+      for (i = 0; i < len; i++) {
+        ret += this.delimiter;
+      }
 
       return ret;
     }

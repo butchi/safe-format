@@ -29,10 +29,20 @@
     }
 
     console.log(`${JSON.stringify(obj)}:`);
-    mark(safe.encode({
+    var str = safe.encode({
       obj: obj,
       delimiter: '-',
-    }));
+    });
+
+    mark(str);
+
+    var decoded = safe.decode({
+      str: str,
+      delimiter: '-',
+    });
+
+    console.log('decoded:', decoded);
+
     console.log('');
   }
 })();
