@@ -1,4 +1,4 @@
-export default class SafeForamt {
+export default class SafeEncoder {
   constructor(opts = {}) {
     this.delimiter = opts.delimiter || '-';
   }

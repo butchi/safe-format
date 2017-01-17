@@ -5,22 +5,56 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SafeDecoder = function () {
+  function SafeDecoder() {
+    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, SafeDecoder);
+
+    this.delimiter = opts.delimiter || '-';
+  }
+
+  _createClass(SafeDecoder, [{
+    key: 'decode',
+    value: function decode(str) {
+      var ret = {};
+
+      return ret;
+    }
+  }]);
+
+  return SafeDecoder;
+}();
+
+exports.default = SafeDecoder;
+
+},{}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SafeForamt = function () {
-  function SafeForamt() {
+var SafeEncoder = function () {
+  function SafeEncoder() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _classCallCheck(this, SafeForamt);
+    _classCallCheck(this, SafeEncoder);
 
     this.delimiter = opts.delimiter || '-';
   }
 
-  _createClass(SafeForamt, [{
+  _createClass(SafeEncoder, [{
     key: 'encode',
     value: function encode(obj) {
       var HEAD_SAFE = 'safe';
@@ -212,20 +246,24 @@ var SafeForamt = function () {
     }
   }]);
 
-  return SafeForamt;
+  return SafeEncoder;
 }();
 
-exports.default = SafeForamt;
+exports.default = SafeEncoder;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _SafeFormat = require('./module/SafeFormat');
+var _SafeEncoder = require('./module/SafeEncoder');
 
-var _SafeFormat2 = _interopRequireDefault(_SafeFormat);
+var _SafeEncoder2 = _interopRequireDefault(_SafeEncoder);
+
+var _SafeDecoder = require('./module/SafeDecoder');
+
+var _SafeDecoder2 = _interopRequireDefault(_SafeDecoder);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -248,12 +286,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var obj = opts.obj;
         var delimiter = opts.delimiter || '-';
 
-        var safeFormat = new _SafeFormat2.default({
+        var safeEncoder = new _SafeEncoder2.default({
           delimiter: delimiter
         });
 
         if (type === 'safe-format') {
-          return safeFormat.encode(obj);
+          return safeEncoder.encode(obj);
+        }
+      }
+    }, {
+      key: 'decode',
+      value: function decode() {
+        var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        var type = opts.type || 'safe-format';
+        var str = opts.str;
+        var delimiter = opts.delimiter || '-';
+
+        var safeDecoder = new _SafeDecoder2.default({
+          delimiter: delimiter
+        });
+
+        if (type === 'safe-format') {
+          return safeDecoder.decode(str);
         }
       }
     }]);
@@ -268,4 +323,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./module/SafeFormat":1}]},{},[2]);
+},{"./module/SafeDecoder":1,"./module/SafeEncoder":2}]},{},[3]);
