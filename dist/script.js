@@ -65,67 +65,50 @@ var SafeForamt = function () {
   }, {
     key: 'encodeArray',
     value: function encodeArray(arr) {
+      var _this = this;
+
       var ret = '';
 
-      if (arr == null) {
-        ret = this.encodePrimitive(null);
-        return ret;
-      } else if (arr.length === 0) {
-        ret = arr[0];
-        return this.encodePrimitive(ret);
-      }if (arr.length === 1) {
-        ret = this.encodePrimitive(arr[0]);
-        return ret;
+      if (arr === null) {
+        return this.encodePrimitive(null);
+      }
+      if (arr.length === 0) {
+        return this.encodePrimitive(undefined);
       }
 
-      var head = 'array';
+      var strArr = [];
 
-      var first = arr[0];
-      var rest = arr.slice(1);
+      arr.forEach(function (item, i) {
+        strArr[i] = _this.encodeChild(item);
+      });
 
-      var left = this.encodeChild(first);
-      var right = this.encodeArray(rest);
-
-      if (right) {
-        ret = this.join(left, right);
-      } else {
-        ret = left;
-      }
+      ret = this.join.apply(this, strArr);
 
       return ret;
     }
   }, {
     key: 'encodeObject',
     value: function encodeObject(obj) {
+      var _this2 = this;
+
       var ret = '';
 
       var keys = Object.keys(obj);
 
       if (obj == null) {
         return this.encodePrimitive(null);
-      } else if (keys.length === 0) {
+      }
+      if (keys.length === 0) {
         return this.encodePrimitive(undefined);
-      } else if (keys.length === 1) {
-        return this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
       }
 
-      var head = 'object';
+      var strArr = [];
 
-      var left = this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
-
-      var objRest = {};
-
-      var rest = keys.slice(1).forEach(function (key) {
-        objRest[key] = obj[key];
+      keys.forEach(function (key, i) {
+        strArr[i] = _this2.encodeKeyValue(key, _this2.encodeChild(obj[key]));
       });
 
-      var right = this.encodeObject(objRest);
-
-      if (right) {
-        ret = this.join(left, right);
-      } else {
-        ret = left;
-      }
+      ret = this.join.apply(this, strArr);
 
       return ret;
     }
@@ -136,23 +119,22 @@ var SafeForamt = function () {
     }
   }, {
     key: 'join',
-    value: function join(leftStr, rightStr) {
-      var len = Math.max(this.getLongest(leftStr), this.getLongest(rightStr)) + 1;
+    value: function join() {
+      var _this3 = this;
 
-      return leftStr + this.constantSpace(len) + rightStr;
-    }
+      var longestArr = [];
 
-    // from markright.js
+      for (var _len = arguments.length, strArr = Array(_len), _key = 0; _key < _len; _key++) {
+        strArr[_key] = arguments[_key];
+      }
 
-  }, {
-    key: 'splitStr',
-    value: function splitStr(str) {
-      var res = void 0;
-      var longest = this.getLongest(str);
+      strArr.forEach(function (str) {
+        longestArr.push(_this3.getLongest(str));
+      });
 
-      res = str.split(this.constantSpace(longest));
+      var len = Math.max.apply(Math, longestArr);
 
-      return res;
+      return strArr.join(this.constantSpace(len + 1));
     }
 
     // from markright.js

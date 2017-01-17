@@ -46,30 +46,20 @@ export default class SafeForamt {
   encodeArray(arr) {
     let ret = '';
 
-    if(arr == null) {
-      ret = this.encodePrimitive(null);
-      return ret;
-    } else if(arr.length === 0) {
-      ret = arr[0];
-      return this.encodePrimitive(ret);
-    } if(arr.length === 1) {
-      ret = this.encodePrimitive(arr[0]);
-      return ret;
+    if(arr === null) {
+      return this.encodePrimitive(null);
+    }
+    if(arr.length === 0) {
+      return this.encodePrimitive(undefined);
     }
 
-    const head = 'array';
+    let strArr = [];
 
-    const first = arr[0];
-    const rest = arr.slice(1);
+    arr.forEach((item, i) => {
+      strArr[i] = this.encodeChild(item);
+    });
 
-    const left = this.encodeChild(first);
-    const right = this.encodeArray(rest);
-
-    if(right) {
-      ret = this.join(left, right);
-    } else {
-      ret = left;
-    }
+    ret = this.join(...strArr);
 
     return ret;
   }
@@ -81,29 +71,18 @@ export default class SafeForamt {
 
     if(obj == null) {
       return this.encodePrimitive(null);
-    } else if(keys.length === 0) {
+    }
+    if(keys.length === 0) {
       return this.encodePrimitive(undefined);
-    } else if(keys.length === 1) {
-      return this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
     }
 
-    const head = 'object';
+    let strArr = [];
 
-    const left = this.encodeKeyValue(keys[0], this.encodeChild(obj[keys[0]]));
-
-    let objRest = {};
-
-    let rest = keys.slice(1).forEach((key) => {
-      objRest[key] = obj[key];
+    keys.forEach((key, i) => {
+      strArr[i] = this.encodeKeyValue(key, this.encodeChild(obj[key]))
     });
 
-    const right = this.encodeObject(objRest);
-
-    if(right) {
-      ret = this.join(left, right);
-    } else {
-      ret = left;
-    }
+    ret = this.join(...strArr);
 
     return ret;
   }
@@ -112,20 +91,15 @@ export default class SafeForamt {
     return this.join(key, value);
   }
 
-  join(leftStr, rightStr) {
-    let len = Math.max(this.getLongest(leftStr), this.getLongest(rightStr)) + 1;
+  join(...strArr) {
+    let longestArr = [];
+    strArr.forEach((str) => {
+      longestArr.push(this.getLongest(str));
+    });
 
-    return leftStr + this.constantSpace(len) + rightStr;
-  }
+    let len = Math.max(...longestArr);
 
-  // from markright.js
-  splitStr(str) {
-    let res;
-    let longest = this.getLongest(str);
-
-    res = str.split(this.constantSpace(longest));
-
-    return res;
+    return strArr.join(this.constantSpace(len + 1));
   }
 
   // from markright.js
